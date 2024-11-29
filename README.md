@@ -2,7 +2,7 @@
 
 > Model Context Protocol Manager
 
-![img.png]
+![img.png](img.png)
 
 ```
 npx mcpfoundation add <name>
