@@ -1,0 +1,180 @@
+<html>
+<head>
+<style>
+body {
+  margin: 10px auto;
+}
+table {
+  background: rgba(0,0,0,0.04);
+  width: 100%;
+}
+td, th {
+  padding: 10px;
+  font-family: Sans-serif;
+  font-size: 16px;
+  text-align: left;
+  cursor: pointer;
+}
+.logo {
+  text-align: center;
+}
+.logo img {
+  max-width: 400px;
+}
+.term {
+  padding: 10px;
+  background: black;
+  color: white;
+}
+label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+input[type=text] {
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+</style>
+</head>
+<body>
+<div class='container'>
+  <div class='logo'>
+    <img src="img.png">
+  </div>
+  <table id='table'></table>
+</div>
+<script>
+let o = {}
+const refresh = async () => {
+  let items = await fetch("https://api.github.com/search/repositories?q=topic:mcpfoundation&sort=updated&direction=desc").then((res) => {
+    return res.json()
+  }).then((res) => {
+    console.log(res.items)
+    return res.items.map((item) => {
+      let owner_avatar = item.owner.avatar_url
+      let owner_name = item.owner.login
+      let url = item.html_url
+      let name = item.full_name
+      let short_name = item.name
+      let description = (item.description ? item.description : "")
+      let star = item.stargazers_count
+      let watch = item.watchers_count
+      let fork = item.forks
+      let clone = item.html_url
+      let created = item.created_at
+      let updated = item.updated_at
+      return {
+        title: name.split("/")[1],
+        description,
+        image: owner_avatar,
+        url,
+        path: name,
+        download: clone,
+        updated,
+        name: `${item.owner.login}/${item.name}`,
+        star
+      }
+    })
+  })
+        console.log("items", items)
+  let rows = items.map((item) => {
+    return `<tr class='row' data-path="${item.path}">
+<td ><div class='clickable'>${item.path}</div><table></table></td>
+<td>${item.star}</td>
+</tr>`
+  }).join("")
+  let table = `<tr>
+  <th>name</th>
+  <th>stars</th>
+</tr>
+${rows}`
+  let o = {}
+  document.querySelector("#table").innerHTML = table
+  document.querySelector("#table").addEventListener("input", (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    let key = e.target.getAttribute("data-key")
+    if (key) {
+      let val = e.target.value
+      let path = e.target.closest(".row").getAttribute("data-path")
+      let itempath = e.target.closest("tr").getAttribute("data-path")
+      let item = o[`${path}/${itempath}`]
+      let vals = {}
+      let els = e.target.closest(".fields").querySelectorAll("input[type=text]")
+      for(let el of els) {
+        vals[el.getAttribute("data-key")] = el.value 
+      }
+      console.log({ item, vals })
+      e.target.closest("td").querySelector(".term").innerHTML = render(path, item, vals).cmd
+    }
+
+  })
+  const render = (path, item, vals) => {
+    let cmd = `npx mcpfoundation add ${path}/${item.path}`
+    let args = ""
+    let fields = ""
+    if (item.args) {
+      for(let key in item.args) {
+        if (vals) {
+          cmd = cmd + ` --${key} ${vals[key]}` 
+        } else {
+          cmd = cmd + ` --${key} ${key}` 
+        }
+        fields = fields + `<div class='field'><label>${key}</label><input data-path="${item.path}" data-key="${key}" type='text'></div>`
+      }
+    }
+    console.log("render", { cmd, fields })
+    return { cmd, fields }
+  }
+  document.querySelector("#table").addEventListener("click", async (e) => {
+    let target
+    if (e.target.classList.contains("clickable")) {
+      target = e.target
+    } else {
+      target = e.target.closest(".clickable")
+    }
+    if (e.target.classList.contains("clickable")) {
+      target = e.target
+    } else {
+      target = e.target.closest(".clickable")
+    }
+    if (target) {
+      target = target.closest(".row")
+      let path = target.getAttribute("data-path")
+      let res = await fetch(`https://raw.githubusercontent.com/${path}/refs/heads/main/mcpfoundation.json`).then((res) => {
+        return res.json()
+      })
+
+
+      target.querySelector("table").innerHTML = res.servers.map((item) => {
+        o[`${path}/${item.path}`] = item
+        let { cmd, fields } = render(path, item)
+        return `<tr data-path="${item.path}">
+<td>${item.path}</td>
+<td>
+  <div>${item.description}</div>
+  <a target="_blank" href="${item.url ? item.url : '' }">${item.url ? 'Link' : ''}</a>
+</td>
+<td>
+</td>
+<td>
+  <div class='fields'>${fields}</div>
+  <div class='term'>${cmd}</div>
+</td>
+</tr>`
+      }).join("")
+
+    }
+  })
+  //for(let item of items) {
+  //  console.log(res)
+  //}
+  //document.querySelector("pre").innerHTML = JSON.stringify(items, null, 2)
+}
+refresh()
+</script>
+</body>
+</html>

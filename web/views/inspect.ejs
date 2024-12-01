@@ -1,0 +1,85 @@
+<html>
+<head>
+<link href="/style.css" rel="stylesheet"/>
+</head>
+<body>
+<main>
+<nav>
+  <a href="/">
+    <img class='logo' src='/logo.png'>
+  </a>
+</nav>
+<header>
+  <h1><a target="_blank" href="<%=url%>"><%=url%></a></h1>
+  <div>View the local MCP file: <button onclick="run(this, 'open')">Open</button></div>
+
+</header>
+<% items.forEach((item) => { %>
+  <div class='td' data-key="<%=item.id%>">
+    <div class='header'>
+      <% if (item.on) { %>
+        <div class='badge on'>ON</div>
+      <% } else { %>
+        <div class='badge off'>OFF</div>
+      <% } %>
+      <h2><%=item.id%></h2>
+    </div>
+    <% item.args.forEach((arg, i) => { %>
+      <div class='field' data-arg="<%=arg%>">
+        <div><label><%=arg%></label></div>
+        <% if (item.stored_args && item.stored_args[arg]) { %>
+          <div><input type='text' value="<%=item.stored_args[arg]%>"></div>
+        <% } else { %>
+          <div><input type='text'></div>
+        <% } %>
+      </div>
+    <% }) %>
+    <div class='footer'>
+      <% if (item.on) { %>
+        <button onclick="run(this, 'rm')">Remove</button>
+      <% } else { %>
+        <button onclick="run(this, 'add')">Add</button>
+      <% } %>
+      </div> 
+  </div>
+<% }) %>
+</main>
+<script>
+const parse = (el, action) => {
+  let key = el.closest(".td").getAttribute("data-key")
+  let o = {
+    _: [action, key]
+  }
+  if (action === "add") {
+    let fields = el.closest(".td").querySelectorAll(".field")
+    for(let field of fields) {
+      let arg = field.getAttribute("data-arg")
+      let val = field.querySelector("input").value
+      o[arg] = val
+      if (!val) {
+        alert(`Please enter ${arg}`)
+        return
+      }
+    }
+  }
+  return o
+}
+const run = async (el, action) => {
+  let parsed
+  if (action === "open") {
+    parsed = { _: ["open"] }
+  } else {
+    parsed = parse(el, action)
+  }
+  await fetch("/run", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(parsed)
+  })
+  location.href = location.href
+}
+</script>
+</body>
+</html>

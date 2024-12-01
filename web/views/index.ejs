@@ -1,0 +1,27 @@
+<html>
+<head>
+<link href="/style.css" rel="stylesheet"/>
+</head>
+<body class='center'>
+<main>
+<nav>
+  <a href="/">
+    <img class='logo' src='/logo.png'>
+  </a>
+</nav>
+<form id="search" onsubmit="handleRedirect(event)">
+  <input id='repo' type='search' placeholder='enter a github repo id' value='<%=MCP_DEFAULT_REPO%>'>
+  <button type="submit">Go</button>
+</form>
+</main>
+<script>
+  function handleRedirect(event) {
+    event.preventDefault(); // Prevent the form's default submission behavior
+    const path = document.querySelector("#repo").value
+    if (path) {
+      window.location.href = "/inspect/" + path
+    }
+  }
+</script>
+</body>
+</html>

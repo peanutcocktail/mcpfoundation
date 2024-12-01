@@ -1,0 +1,131 @@
+main {
+  max-width: 800px;
+  margin: 0 auto;
+}
+body.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+body.center main {
+  max-width: 400px;
+  width: 100%;
+}
+form#search {
+  width: 100%;
+  display: flex;
+  flex-shrink: 0;
+  align-items: stretch;
+  max-width: 400px;
+}
+form#search button {
+  margin: 0;
+  border: 1px solid rgba(0,0,0,0.4);
+}
+form#search input {
+  padding: 10px;
+  margin: 0;
+  flex-grow: 1;
+  border: 1px solid rgba(0,0,0,0.4);
+}
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+}
+header button {
+  width: auto;
+}
+header {
+  padding: 10px 30px 30px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+header a {
+  color: black;
+}
+table {
+  width: 100%;
+}
+body {
+  font-family: Sans-serif;
+  font-size: 14px;
+}
+.td {
+  padding: 30px;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+.td input {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  margin-top: 5px;
+  border: 1px solid rgba(0,0,0,0.8);
+}
+.td label {
+  font-size: 12px;
+  font-weight: bold;
+}
+.td .field {
+  margin: 10px 0;
+}
+button {
+  margin-top: 5px;
+  background: black;
+  color: white;
+  padding: 5px 10px;
+  width: 80px;
+  border: none;
+  border-radius: 2px;
+}
+.footer {
+  text-align: right;
+}
+.header {
+  display: flex;
+  align-items: center;
+}
+.header .badge.on {
+  background: yellowgreen;
+  padding: 5px 10px;
+  border-radius: 20px;
+  color: white;
+  margin-right: 5px;
+}
+.header .badge.off {
+  background: silver;
+  padding: 5px 10px;
+  border-radius: 20px;
+  color: white;
+  margin-right: 5px;
+}
+h2 {
+  margin: 0;
+  font-size: 18px;
+}
+img.logo {
+  width: 50px;
+  margin-right: 10px;
+}
+nav a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+}
+.type_selector {
+  display: flex;
+  align-items: center;
+}
+.type_selector a {
+  padding: 5px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+h1 {
+  margin: 0;
+  padding-bottom: 10px;
+}
