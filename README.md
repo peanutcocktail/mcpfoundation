@@ -4,11 +4,18 @@
 
 ![img.png](img.png)
 
+## 1. Web
+
+```
+npx -y -p mcpfoundation@latest web
+```
+
+## 2. CLI
+
 ```
 npx mcpfoundation add <name> (<args...>)
 npx mcpfoundation rm <name> (<args...>)
 npx mcpfoundation ls
-npx mcpfoundation web
 ```
 
 1. Easily add or remove MCP servers with one line.
